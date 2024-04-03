@@ -19,6 +19,36 @@
 		(Pico-pio-usb 0.5.3, Arduino-pico 3.7.2, Adafruit Tinyusb 2.3.3) 
 */
 
+/**koseki(2024.3.20)
+
+	設定モードに入るには 左CTRL + MENU(App) + 100ms -> 'S'キー
+	GK68X USキーボードとUSBライトタッチキーボードを統合
+
+	● GK68X USキーボードの設定モード; *2 + *U + *M
+      ^^^^^^^^^^^^^^^^^
+	・GK68X B割れUSキーボード用に設定を固定。
+	・左親指シフトキーはF14、右親指シフトキーはSpaceにキーボード側で設定すること。
+	--------------------------------------
+	|      F14      |      SP     |  L2  |		Layer1
+	--------------------------------------
+	--------------------------------------
+	|      TAB      |      F15    |  SP  |		Layer2
+	--------------------------------------
+	-------------------------------------------
+	********************************************************
+	*** CPU Seeeduino XIAO (Adafruits SAMD Boards)       ***
+	*** USB Stack = TinyUSB                              ***
+	********************************************************
+
+	\作業ディレクトリ---+---\usb_hobo_nicola_GK68---usb_hobo_nicola_GK68.ino
+	　                  |
+	                    +---\libralies---+---\Adafruit_TinyUSB_Arduino-1.14.2
+	                                     |
+	                                     +---\hoboNicolaLibrary
+										 |
+										 +---\Pico-PIO-USB-main
+*/
+
 #include "Adafruit_USBH_Host.h"
 #include "hobo_nicola.h"
 #include "hobo_board_config.h"
@@ -163,6 +193,8 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
 /** core0 hoboNicola **/
 // Function keys with Fn-key pressed.
 static const uint16_t fn_keys[] PROGMEM = {
+	//**koseki(2024.3.12)
+	/*
 	HID_S | WITH_R_CTRL,	FN_SETUP_MODE,
 	HID_R | WITH_R_CTRL,	FN_MEMORY_READ_MODE,
 	HID_W | WITH_R_CTRL,	FN_MEMORY_WRITE_MODE,
@@ -176,7 +208,16 @@ static const uint16_t fn_keys[] PROGMEM = {
 	HID_L_ARROW,					HID_HOME,
 	HID_ENTER,						FN_MEDIA_PLAY_PAUSE,
 	HID_IME_OFF,					HID_CAPS,								// Fn + ImeOff (Caps) = CapsLock
-	HID_ESCAPE | WITH_R_CTRL,  FN_SYSTEM_SLEEP,   // Ctrl + App + Esc  
+	HID_ESCAPE | WITH_R_CTRL,  FN_SYSTEM_SLEEP,   // Ctrl + App + Esc
+	*/
+  	HID_S | WITH_L_CTRL,		FN_SETUP_MODE,
+	HID_7,						FN_MEDIA_SCAN_PREV,
+	HID_8,						FN_MEDIA_PLAY_PAUSE,
+	HID_9,						FN_MEDIA_SCAN_NEXT,
+	HID_0,						FN_MEDIA_MUTE,
+	HID_MINUS,					FN_MEDIA_VOL_DOWN, 
+	HID_EQUALS,					FN_MEDIA_VOL_UP, 
+	//**
 	0, 0
 };
 

@@ -30,10 +30,20 @@
 //  q w e r t y u i o p @ [
 //  a s d f g h j k l ; : ]
 //  z x c v b n m , . / (under_scoreは含まない)
+//**koseki(2024.3.21)
+/*
 static const uint8_t hid_to_nid_jp[] = {
 	HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8,     HID_9,      HID_0,       HID_MINUS,   HID_EQUALS,  HID_J_BSLASH,
 	HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I,     HID_O,      HID_P,       HID_J_AT,    HID_J_LBRACK,
 	HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K,     HID_L,      HID_SEMICOL, HID_J_COLON, HID_J_RBR_32,
+	HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_PERIOD, HID_SLASH
+};
+*/
+//	KB611用
+static const uint8_t hid_to_nid_jp[] = {
+	HID_1, HID_2, HID_3, HID_4, HID_5, HID_6, HID_7, HID_8,     HID_9,      HID_0,       HID_MINUS,   HID_EQUALS,  HID_J_BSLASH, HID_J_RBRACK,
+	HID_Q, HID_W, HID_E, HID_R, HID_T, HID_Y, HID_U, HID_I,     HID_O,      HID_P,       HID_J_COLON, HID_J_LBRACK,
+	HID_A, HID_S, HID_D, HID_F, HID_G, HID_H, HID_J, HID_K,     HID_L,      HID_SEMICOL, HID_J_AT,	  // C段 0x1b～0x25 (BS,ESCは飛ばす)
 	HID_Z, HID_X, HID_C, HID_V, HID_B, HID_N, HID_M, HID_COMMA, HID_PERIOD, HID_SLASH
 };
 
@@ -57,6 +67,8 @@ static const uint8_t hid_to_nid_us[] = {
 #define s_nul	empty_str
 
 // 1.7.0 １行目の記号の並びを変更。
+//**koseki(2024.3.21)
+/*
 static const uint8_t* const output_single[] PROGMEM = {	// 単独打鍵
 //static const uint8_t* const output_single[] = {	// 単独打鍵
 //1       2        3       4         5          6          7         8         9         10       11       12        13
@@ -89,6 +101,40 @@ static const uint8_t* const output_shift[] PROGMEM = {		// Shiftキー押下中
 	s_nul,   s_nul,   s_larrow, s_rarrow, s_nul,   s_pa,     s_darrow, s_uarrow, s_nul,    s_plus,  s_nul,     s_nul,
 	s_nul,   s_pi,    s_nul,    s_pu,     s_pe,    s_delete, s_enter,  s_nul,    s_po,     s_quest
 };
+*/
+static const uint8_t* const output_single[] PROGMEM = {	// 単独打鍵
+//1          2        3       4         5         6         7         8         9         10         11           12         13           14
+	s_1,     s_2,     s_3,    s_4,      s_5,      s_6,      s_7,      s_8,      s_9,      s_0,       s_minus,     s_carret,  s_bslas,     s_nul,
+	s_peri,  s_ka,    s_ta,   s_ko,     s_sa,     s_ra,     s_ti,     s_ku,     s_tu,     s_comm,    s_comm,      s_nul,
+	s_u,     s_si,    s_te,   s_ke,     s_se,     s_ha,     s_to,     s_ki,     s_i,      s_nn,      s_at,
+	s_peri,  s_hi,    s_su,   s_fu,     s_he,     s_me,     s_so,     s_ne,     s_ho,     s_slash,   s_uline
+};
+
+//
+static const uint8_t* const output_left[] PROGMEM = {		// 左親指同時
+//1          2        3       4         5         6         7         8         9         10         11           12         13           14
+	s_quest, s_slash, s_tild, s_l_brac, s_r_brac, s_l_brac, s_r_brac, s_l_pren, s_r_pren, s_l_cbrac, s_r_cbrac,   s_nul,     s_nul,       s_nul,
+	s_xa, 	 s_e,     s_ri,   s_xya,    s_re,     s_pa,     s_di,     s_gu,     s_du,     s_pi,      s_nul,       s_nul,
+	s_wo,    s_a,     s_na,   s_xyu,    s_mo,     s_ba,     s_do,     s_gi,     s_po,     s_nul,     s_nul,
+	s_xu,    s_minus, s_ro,   s_ya,     s_xi,     s_pu,     s_zo,     s_pe,     s_bo,     s_nul,     s_nul
+};
+
+static const uint8_t* const output_right[] PROGMEM = {		// 右親指同時
+//1          2        3       4         5         6         7         8         9         10         11           12         13           14
+	s_quest, s_slash, s_tild, s_l_brac, s_r_brac, s_l_brac, s_r_brac, s_l_pren, s_r_pren, s_l_cbrac, s_r_cbrac,   s_nul,     s_nul,       s_nul,
+	s_nul,   s_ga,    s_da,   s_go,     s_za,     s_yo,     s_ni,     s_ru,     s_ma,     s_xe,      s_aste,      s_nul,
+	s_vu,    s_ji,    s_de,   s_ge,     s_ze,     s_mi,     s_o,      s_no,     s_xyo,    s_xtu,     s_nul,
+	s_nul,   s_bi,    s_zu,   s_bu,     s_be,     s_nu,     s_yu,     s_mu,     s_wa,     s_xo,      s_nul
+};
+
+static const uint8_t* const output_shift[] PROGMEM = {		// Shiftキー押下中
+//1          2        3       4         5         6         7         8         9         10         11           12         13           14
+	s_excl, s_dquot,  s_hash,   s_doll,   s_perct,  s_amp,   s_quot,   s_l_pren,  s_r_pren, s_tild,    s_equ,     s_nul,     s_pipe,      s_r_cbrac,
+	s_a_Q,  s_a_W,    s_a_E,    s_a_R,    s_a_T,    s_a_Y,    s_a_U,   s_a_I,     s_a_O,    s_a_P,     s_aste,    s_l_cbrac,
+	s_a_A,  s_a_S,    s_a_D,    s_a_F,    s_a_G,    s_a_H,    s_a_J,   s_a_K,     s_a_L,    s_plus,    s_acgra,
+	s_a_Z,  s_a_X,    s_a_C,    s_a_V,    s_a_B,    s_a_N,    s_a_M,   s_less,    s_gt,     s_quest,   s_uline
+};
+//**
 
 // シングル親指キーモード。親指キー同時打鍵時
 static const uint8_t* const output_sigle_simul[] PROGMEM = {		
@@ -109,6 +155,8 @@ static const uint8_t* const output_single_long[] PROGMEM = {
 };
 
 /** US Layout tables. */
+//**koseki(2024.3.21)
+/*
 static const uint8_t* const output_single_us[] PROGMEM = {	// 単独打鍵
 //1       2        3       4         5         6        7       8      9        10       11           12        13
 	s_1,    s_2,     s_3,    s_4,      s_5,      s_6,     s_7,    s_8,   s_9,     s_0,     s_minus,     s_equ,    s_bslas,
@@ -140,6 +188,39 @@ static const uint8_t* const output_shift_us[] PROGMEM = {		// US Layout with Shi
 	s_nul,   s_nul,   s_larrow, s_rarrow, s_nul,   s_pa,     s_darrow, s_uarrow, s_nul,    s_colon,  s_nul,     s_nul,
 	s_nul,   s_pi,    s_nul,    s_pu,     s_pe,    s_delete, s_enter,  s_nul,    s_po,     s_quest
 };
+*/
+static const uint8_t* const output_single_us[] PROGMEM = {	// 単独打鍵
+//1       2        3       4         5         6        7       8      9        10       11           12        13
+	s_1,    s_2,     s_3,    s_4,      s_5,      s_6,     s_7,    s_8,   s_9,     s_0,     s_minus,     s_equ,    s_bslas,
+	s_peri, s_ka,    s_ta,   s_ko,     s_sa,     s_ra,    s_ti,   s_ku,  s_tu,    s_comm,  s_l_brac, 	s_r_brac,
+	s_u,    s_si,    s_te,   s_ke,     s_se,     s_ha,    s_to,   s_ki,  s_i,     s_nn,    s_nul,       s_nul,
+	s_peri, s_hi,    s_su,   s_fu,     s_he,     s_me,    s_so,   s_ne,  s_ho,    s_slash
+};
+
+static const uint8_t* const output_left_us[] PROGMEM = {		// 左親指同時
+//1        2        3       4         5         6          7         8       9         10          11         12        13
+	s_quest, s_slash, s_tild, s_l_brac, s_r_brac, s_less,    s_gt,     s_aste, s_l_pren, s_r_pren,   s_uline,   s_plus,   s_pipe,
+	s_xa, 	 s_e,     s_ri,   s_xya,    s_re,     s_pa,      s_di,     s_gu,   s_du,     s_pi,       s_l_cbrac, s_r_cbrac,
+	s_wo,    s_a,     s_na,   s_xyu,    s_mo,     s_ba,      s_do,     s_gi,   s_po,     s_nul,      s_nul,     s_nul,
+	s_xu,    s_minus, s_ro,   s_ya,     s_xi,     s_pu,      s_zo,     s_pe,   s_bo,     s_nul
+};
+
+static const uint8_t* const output_right_us[] PROGMEM = {		// 右親指同時
+//1        2        3       4         5         6          7         8        9         10          11         12        13
+	s_quest, s_slash, s_tild, s_l_brac, s_r_brac, s_less,    s_gt,     s_aste,  s_l_pren, s_r_pren,   s_uline,   s_plus,   s_pipe,
+	s_nul,   s_ga,    s_da,   s_go,     s_za,     s_yo,      s_ni,     s_ru,    s_ma,     s_xe,       s_l_cbrac, s_r_cbrac,
+	s_vu,    s_ji,    s_de,   s_ge,     s_ze,     s_mi,      s_o,      s_no,    s_xyo,    s_xtu,      s_nul,     s_nul, 
+	s_nul,   s_bi,    s_zu,   s_bu,     s_be,     s_nu,      s_yu,     s_mu,    s_wa,     s_xo
+};
+
+static const uint8_t* const output_shift_us[] PROGMEM = {		// Shiftキー押下中
+//1        2        3         4         5         6         7         8         9         10         11         12      13
+	s_excl,  s_at,    s_hash,   s_doll,   s_perct, s_carret, s_amp,    s_aste,   s_l_pren, s_r_pren, s_uline,   s_plus,   s_pipe,
+	s_a_Q,  s_a_W,   s_a_E,  s_a_R,    s_a_T,    s_a_Y,    s_a_U,   s_a_I,     s_a_O,    s_a_P,     s_l_cbrac,  s_r_cbrac,
+	s_a_A,  s_a_S,   s_a_D,  s_a_F,    s_a_G,    s_a_H,    s_a_J,   s_a_K,     s_a_L,    s_colon,   s_nul,      s_nul,
+	s_a_Z,  s_a_X,   s_a_C,  s_a_V,    s_a_B,    s_a_N,    s_a_M,   s_less,    s_gt,     s_quest
+};
+//**
 
 // シングル親指キーモード。親指キー同時打鍵時
 static const uint8_t* const output_sigle_simul_us[] PROGMEM = {		
@@ -197,12 +278,18 @@ void HoboNicola::set_nid_table(bool us) {
 uint16_t HoboNicola::get_nid(uint8_t& k) {
 	uint16_t m = 0;
 	switch(k) {
+//**koseki(2024.3.31)
+//	KB611用
 	case HID_J_COLON:         // C11 : は後退キーに
-		k =  HID_BACKSP;
+		if (_US_LAYOUT(global_setting))
+			k =  HID_BACKSP;
 		break;
+	/*
 	case HID_J_RBR_32:	       // C12 [ は取消キーに
 		k = HID_ESCAPE;
 		break;
+	*/
+//**
 	case HID_SPACE:
 		if (!dedicated_oyakeys) {
 			if (_SINGLE_OYAYUBI_MODE(global_setting))	// シングル親指のとき、空白キーは右親指キーとみなす。

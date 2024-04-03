@@ -1,54 +1,27 @@
 # Gallery
-## USB hoboNicola. SparkFun promicro and mini USB Host Shield V2.
 
-![](./images/usb_hobonicola_promicro.jpg)
+## SKYLOONG GK68 Lite / GK68X Keyboard
 
-## USB hoboNicola. Seeed XIAO nrf52840 and MAX3421EE.
-
-![](./images/usb_hobonicola_xiao.jpg)
-
-
-## PS/2 hoboNicola. SparkFun promicro and PS/2 (mini DIN) connector.
-
-![](./images/ps2_hobonicola.jpg)
+![](./images/GK68_keyboard.jpg)
 
 ## RP hoboNicola. XIAO RP2040 using PICO-PIO-USB library.
 
-![](./images/rp_hobonicola_xiao.jpg)
+![](./images/RP2040_adapter.jpg)
 
-## XD64 ver3, JP layout
-ATMega32U4
+※この基板は[PCBWayのShared Project](https://www.pcbway.com/project/shareproject/hoboNicola_for_XIAO_RP2040_85b65544.html?fbclid=IwAR2sAHvLnuXRiQwWyAOBNxl92dvUmLA880vfrMHIG3NbP6EjIKG7mfLd4YQ)に登録しています。
 
-![](./images/xd64_nicola_jp_1.jpg)
+## USB hoboNicola. Seeduino XIAO-m0 and mini USB Host Shield V2.
+
+![](./images/miniUHS_adapter.jpg)
 
 
-## XD87, US layout
-ATMega32U4
+## FUJITSU FMV-KB611 Keyboard
 
-![](./images/xd87_nicola_1.jpg)
+![](./images/FMV-KB611_keyboard.jpg)
 
-## NK60 rev02, US layout
-RP2040
+## PS/2 hoboNicola. Pro Micro (USB Type C) and PS/2 connector.
 
-![](./images/nk60_rev020_us.jpg)
-
-## NK60 rev031, JP layout
-RP2040
-
-( XVX Profile Keycaps set.)
-
-![](./images/nk60_rev31_us1.jpg)
-
-## NK60 rev031, JP layout
-RP2040
-
-( ARCHISS JIS Keycaps set.)
-
-![](./images/nk60_rev031_jp.jpg)
-
-( Keychron JIS Keycaps set.)
-
-![](./images/nk60_rev31_jp2.jpg)
+![](./images/PS2_adapter.jpg)
 
 
 [戻る/Back](../README.md)

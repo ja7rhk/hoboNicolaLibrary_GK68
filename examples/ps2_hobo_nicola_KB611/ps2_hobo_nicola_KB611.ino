@@ -21,6 +21,31 @@
   hoboNicolaLibrary 1.7.6   Mar. 8. 2024
 */
 
+/**koseki(2024.3.21)
+
+	設定モードに入るには 右CTRL + MENU(App) + 100ms -> 'S'キー
+	GK68X USキーボードとFMV-KB611を共通のライブラリにした。
+	USキーボードを選択しない場合はKB611用のキー配列一択になり、JIS109キーボードの配列には合わない。
+	※通常のJISキーボードを使う場合は本家のhoboNicolaライブラリを使用する。
+
+	● FMV-KB611キーボードの設定モード; *3 + *N + *K  (00018100 : 00000000 : 00000007 : 00000040)
+      ^^^^^^^^^^^^^^^^^
+	---------------------------------
+	|      F23      |      F24      |	親指シフトキーは内部で使うだけでPCに送信されない。
+	---------------------------------
+            | 無変換 |  変換  |
+	        ------------------
+	-------------------------------------------
+	********************************************************
+	*** CPU Arduino Leonardo (Arduino AVR Boards)        ***
+	********************************************************
+
+	\作業ディレクトリ---+---\ps2_hobo_nicola_KB611---ps2_hobo_nicola_KB611.ino
+	　                 |
+	                   +---\libralies---+---\hoboNicolaLibrary
+
+*/
+
 #include "hobo_nicola.h"
 #include "hobo_board_config.h"
 #include "hobo_sleep.h"
@@ -75,6 +100,12 @@ void setup() {
 	ps2 = ps2_kbd::getInstance();
 	if (!ps2->begin(new ps2_event, LED_BUILTIN_RX))
 		hobo_nicola.error_blink(400);
+//**koseki(2024.3.21)
+	ps2->kbd_jis109();    //KB611の親指シフト動作を無効にする
+	hobo_nicola.has_dedicated_oyakeys(true);        // 専用の親指キーがある(KB611)
+	hobo_nicola.set_oyayubi_keys(HID_F23, HID_F24); // キーコードを変換済、左親指⇒F23、右親指⇒F24
+//**
+
 }
 
 void loop() {

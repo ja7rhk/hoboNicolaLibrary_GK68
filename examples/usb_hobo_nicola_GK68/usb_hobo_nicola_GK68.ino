@@ -23,6 +23,35 @@
 		XIAO-RP2040, Adafruit KB2040,
 */
 
+/**koseki(2024.3.20)
+
+	設定モードに入るには 左CTRL + MENU(App) + 100ms -> 'S'キー
+	GK68X USキーボードとUSBライトタッチキーボードを統合
+
+	● GK68X USキーボードの設定モード; *2 + *U + *M
+      ^^^^^^^^^^^^^^^^^
+	・GK68X B割れUSキーボード用に設定を固定。
+	・左親指シフトキーはF14、右親指シフトキーはSpaceにキーボード側で設定すること。
+	--------------------------------------
+	|      F14      |      SP     |  L2  |		Layer1
+	--------------------------------------
+	--------------------------------------
+	|      TAB      |      F15    |  SP  |		Layer2
+	--------------------------------------
+	-------------------------------------------
+	********************************************************
+	*** CPU Seeeduino XIAO (Adafruits SAMD Boards)       ***
+	*** USB Stack = TinyUSB                              ***
+	********************************************************
+
+	\作業ディレクトリ---+---\usb_hobo_nicola_GK68---usb_hobo_nicola_GK68.ino
+	　                  |
+	                    +---\libralies---+---\Adafruit_TinyUSB_Library
+	                                     |
+	                                     +---\hoboNicolaLibrary
+										 
+*/
+
 #include "hobo_nicola.h"
 #include "hobo_sleep.h"
 #include "uhslib2.h"
@@ -33,6 +62,8 @@ static const uint8_t FN_BLE_SWITH  = FN_EXTRA_START;
 #endif
 // Function keys with Fn-key pressed.
 static const uint16_t fn_keys[] PROGMEM = {
+	//**koseki(2024.3.12)
+	/*
 	HID_S | WITH_R_CTRL,	FN_SETUP_MODE,
 	HID_R | WITH_R_CTRL,	FN_MEMORY_READ_MODE,	// read stored settings
 	HID_W | WITH_R_CTRL,	FN_MEMORY_WRITE_MODE,	// store current settings
@@ -50,6 +81,15 @@ static const uint16_t fn_keys[] PROGMEM = {
 #if defined(NRF52_SERIES)
 	HID_B | WITH_L_CTRL | WITH_L_ALT,  FN_BLE_SWITH,
 #endif
+	*/
+	HID_S | WITH_L_CTRL,		FN_SETUP_MODE,
+	HID_7,						FN_MEDIA_SCAN_PREV,
+	HID_8,						FN_MEDIA_PLAY_PAUSE,
+	HID_9,						FN_MEDIA_SCAN_NEXT,
+	HID_0,						FN_MEDIA_MUTE,
+	HID_MINUS,					FN_MEDIA_VOL_DOWN, 
+	HID_EQUALS,					FN_MEDIA_VOL_UP, 
+	//**
 	0, 0
 };
 

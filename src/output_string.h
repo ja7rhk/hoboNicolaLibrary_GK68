@@ -183,4 +183,32 @@ static const uint8_t s_darrow[] PROGMEM = {HID_DIRECT_PREFIX, HID_D_ARROW, 0};  
 static const uint8_t s_delete[] PROGMEM = {HID_DIRECT_PREFIX, HID_DELETE, 0};     // N Delete
 static const uint8_t s_enter[] PROGMEM = {HID_DIRECT_PREFIX, HID_ENTER, 0};      // M Enter
 
+//**koseki(2024.3.20)
+static const uint8_t s_a_A[] PROGMEM = "A"; // A
+static const uint8_t s_a_B[] PROGMEM = "B"; // B
+static const uint8_t s_a_C[] PROGMEM = "C"; // C
+static const uint8_t s_a_D[] PROGMEM = "D"; // D
+static const uint8_t s_a_E[] PROGMEM = "E"; // E
+static const uint8_t s_a_F[] PROGMEM = "F"; // F
+static const uint8_t s_a_G[] PROGMEM = "G"; // G
+static const uint8_t s_a_H[] PROGMEM = "H"; // H
+static const uint8_t s_a_I[] PROGMEM = "I"; // I
+static const uint8_t s_a_J[] PROGMEM = "J"; // J
+static const uint8_t s_a_K[] PROGMEM = "K"; // K
+static const uint8_t s_a_L[] PROGMEM = "L"; // L
+static const uint8_t s_a_M[] PROGMEM = "M"; // M
+static const uint8_t s_a_N[] PROGMEM = "N"; // N
+static const uint8_t s_a_O[] PROGMEM = "O"; // O
+static const uint8_t s_a_P[] PROGMEM = "P"; // P
+static const uint8_t s_a_Q[] PROGMEM = "Q"; // Q
+static const uint8_t s_a_R[] PROGMEM = "R"; // R
+static const uint8_t s_a_S[] PROGMEM = "S"; // S
+static const uint8_t s_a_T[] PROGMEM = "T"; // T
+static const uint8_t s_a_U[] PROGMEM = "U"; // U
+static const uint8_t s_a_V[] PROGMEM = "V"; // V
+static const uint8_t s_a_W[] PROGMEM = "W"; // W
+static const uint8_t s_a_X[] PROGMEM = "X"; // X
+static const uint8_t s_a_Y[] PROGMEM = "Y"; // Y
+static const uint8_t s_a_Z[] PROGMEM = "Z"; // Z
+//**
 #endif 	// __OUTPUT_STRINGS_H__
