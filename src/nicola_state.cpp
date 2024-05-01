@@ -21,6 +21,10 @@
 		hoboNicola 1.7.0. March.3. 2023
 			Separating nicola tables to nicola_table.cpp
 */
+//**koseki(2024.5.1)
+//	- deleted the Release_Wait_State.
+//	- added output_oya_long_press() for long time pressing oyayubi.
+//**
 
 #include "hobo_nicola.h"
 #include "hobo_settings.h"
@@ -62,202 +66,219 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 		repeat_time = 0;
 	}
 	switch(state) {
-	case Initial_State:
-		event_time = moji_time = oyayubi_time = 0;
-		oyayubi = moji = 0;
-		repeat_moji = repeat_oyayubi = 0;
-		repeat_time = 0;
-		immediate = false;
-		switch(e) {
-		case Moji_pressed:
-			moji_set(param);
-			state = Character_State;
+		case Initial_State:
+			event_time = moji_time = oyayubi_time = 0;
+			oyayubi = moji = 0;
+			repeat_moji = repeat_oyayubi = 0;
+			repeat_time = 0;
+			immediate = false;
+			switch(e) {
+				case Moji_pressed:
+					moji_set(param);
+					state = Character_State;
+					break;
+				case Oyayubi_pressed:
+					oyayubi_set(param);
+					state = Oyayubi_State;
+					break;
+				default:
+					break;
+			}
 			break;
-		case Oyayubi_pressed:
-			oyayubi_set(param);
-			state = Oyayubi_State;
+		case Character_State:
+			switch(e) {
+				case Init:
+					state = Initial_State;
+					break;
+				case All_off:
+					output();
+					state = Initial_State;
+					break;
+				case Key_released:
+					if (param == moji) {	// 関係のない文字のオフは無視する。
+						output();
+						state = Initial_State;
+					}
+					break;
+				case Moji_pressed:
+					output();
+					moji_set(param);
+					break;
+				case Oyayubi_pressed:
+					oyayubi_set(param);
+					state = Char_Oya_State;
+					break;
+				case Time_out:
+					repeat_moji = moji;
+					output();
+					//**koseki(2024.5.1)
+					/*
+					if (_SINGLE_OYAYUBI_MODE(global_setting)) {	// 長押し待ちへ
+						event_time = now + e_longpressTime;
+						state = Release_Wait_State;
+					} else {
+					*/
+						state = Repeat_State;
+						repeat_time = millis() + repeat_delay;
+					//}
+					//**
+					break;
+				default:
+					break;			
+			}
 			break;
-		default:
+		//**koseki(2024.5.1)
+		/*
+		case Release_Wait_State:	// 長押しタイムアウト待ち
+			switch(e) {
+				case Moji_pressed:
+					moji_set(param);
+					state = Character_State;
+					break;
+				case Oyayubi_pressed:
+					oyayubi_set(param);
+					state = Oyayubi_State;
+					break;
+				case Time_out:	// 長押し時間経過
+					repeat_oyayubi = NID_LONG_PRESSED;
+					output();	
+					state = Repeat_State;
+					repeat_time = millis() + repeat_delay;
+					break;
+				default:
+					state = Initial_State;
+					break;			
+				}
 			break;
-		}
-		break;
-	case Character_State:
-		switch(e) {
-		case Init:
-			state = Initial_State;
+		*/
+		//**
+		case Oyayubi_State:
+			switch(e) {
+				case Init:
+					state = Initial_State;
+					break;
+				case Moji_pressed:
+					repeat_oyayubi = oyayubi;
+					repeat_moji = param;
+					output();
+					state = Repeat_State;
+					repeat_time = millis() + repeat_delay;
+					break;
+				case All_off:
+					output();
+					state = Initial_State;
+					break;
+				case Key_released:
+					if (param == oyayubi) {
+						output();
+						state = Initial_State;
+					}
+					break;
+				case Oyayubi_pressed:
+					output();
+					oyayubi_set(param);
+					break;
+				case Time_out:
+					if (!dedicated_oyakeys) {
+						repeat_oyayubi = oyayubi;
+					//**koseki(2024.5.1)
+						//output();
+						output_oya_long_press();
+						//state = Repeat_State;
+						state = Initial_State;
+						//repeat_time = millis() + repeat_delay;
+					//**
+					}
+					break;
+				default:
+					break;			
+			}
 			break;
-		case All_off:
-			output();
-			state = Initial_State;
+		case Char_Oya_State:
+			switch(e) {
+				case Init:
+					state = Initial_State;
+					break;
+				case All_off:
+					output();
+					state = Initial_State;
+					break;
+				case Oyayubi_pressed:
+					output();
+					oyayubi_set(param);
+					state = Oyayubi_State;
+					break;
+				case Moji_pressed:
+					if ((oyayubi_time - moji_time) < (now - oyayubi_time)) {
+						output();   // 先行の文字と親指
+						moji_set(param);
+						state = Character_State;
+					} else {
+						uint16_t oya = oyayubi;
+						oyayubi = 0;
+						if (!immediate)
+							output();   // 先行の文字だけ出す
+						immediate = false;
+						repeat_oyayubi = oya;
+						repeat_moji = param;
+						output();   // 後追いの文字と親指
+						state = Repeat_State;
+						repeat_time = millis() + repeat_delay;
+					}
+					break;
+				case Key_released:  // 文字キーが離されたタイミングに応じて単独打鍵とする。
+					if ((moji == param) && (now - oyayubi_time < e_nicolaTime) && (oyayubi_time - moji_time) > (now - oyayubi_time)) {
+						uint16_t oya = oyayubi;
+						oyayubi = 0;
+						if (!immediate)
+							output();  
+						moji = 0;
+						immediate = false;
+						oyayubi = oya;
+						state = Oyayubi_State;
+						break;
+					}
+					output();
+					state = Initial_State;
+					break;
+				case Time_out:
+					repeat_oyayubi = oyayubi;
+					repeat_moji = moji;
+					output();
+					state = Repeat_State;
+					repeat_time = millis() + repeat_delay;
+					break;
+				default:
+					break;		
+			}
 			break;
-		case Key_released:
-			if (param == moji) {	// 関係のない文字のオフは無視する。
+		case Repeat_State:
+			switch(e) {
+			case Key_repeat:
 				output();
-				state = Initial_State;
-			}
-			break;
-		case Moji_pressed:
-			output();
-			moji_set(param);
-			break;
-		case Oyayubi_pressed:
-			oyayubi_set(param);
-			state = Char_Oya_State;
-			break;
-		case Time_out:
-			repeat_moji = moji;
-			output();
-			if (_SINGLE_OYAYUBI_MODE(global_setting)) {	// 長押し待ちへ
-				event_time = now + e_longpressTime;
-				state = Release_Wait_State;
-			} else {
-				state = Repeat_State;
-				repeat_time = millis() + repeat_delay;
-			}
-			break;
-		default:
-			break;			
-		}
-		break;
-
-	case Release_Wait_State:	// 長押しタイムアウト待ち
-		switch(e) {
-		case Moji_pressed:
-			moji_set(param);
-			state = Character_State;
-			break;
-		case Oyayubi_pressed:
-			oyayubi_set(param);
-			state = Oyayubi_State;
-			break;
-		case Time_out:	// 長押し時間経過
-			repeat_oyayubi = NID_LONG_PRESSED;
-			output();	
-			state = Repeat_State;
-			repeat_time = millis() + repeat_delay;
-			break;
-		default:
-			state = Initial_State;
-			break;			
-		}
-		break;
-	case Oyayubi_State:
-		switch(e) {
-		case Init:
-			state = Initial_State;
-			break;
-		case Moji_pressed:
-			repeat_oyayubi = oyayubi;
-			repeat_moji = param;
-			output();
-			state = Repeat_State;
-			repeat_time = millis() + repeat_delay;
-			break;
-		case All_off:
-			output();
-			state = Initial_State;
-			break;
-		case Key_released:
-			if (param == oyayubi) {
-				output();
-				state = Initial_State;
-			}
-			break;
-		case Oyayubi_pressed:
-			output();
-			oyayubi_set(param);
-			break;
-		case Time_out:
-			if (!dedicated_oyakeys) {
-				repeat_oyayubi = oyayubi;
-				output();
-				state = Repeat_State;
-				repeat_time = millis() + repeat_delay;
-			}
-			break;
-		default:
-			break;			
-		}
-		break;
-	case Char_Oya_State:
-		switch(e) {
-		case Init:
-			state = Initial_State;
-			break;
-		case All_off:
-			output();
-			state = Initial_State;
-			break;
-		case Oyayubi_pressed:
-			output();
-			oyayubi_set(param);
-			state = Oyayubi_State;
-			break;
-		case Moji_pressed:
-			if ((oyayubi_time - moji_time) < (now - oyayubi_time)) {
-				output();   // 先行の文字と親指
+				break;
+			case Oyayubi_pressed:
+				oyayubi_set(param);
+				moji = 0;
+				state = Oyayubi_State;
+				break;		
+			case Moji_pressed:
 				moji_set(param);
 				state = Character_State;
-			} else {
-				uint16_t oya = oyayubi;
-				oyayubi = 0;
-				if (!immediate)
-					output();   // 先行の文字だけ出す
-				immediate = false;
-				repeat_oyayubi = oya;
-				repeat_moji = param;
-				output();   // 後追いの文字と親指
-				state = Repeat_State;
-				repeat_time = millis() + repeat_delay;
-			}
-			break;
-		case Key_released:  // 文字キーが離されたタイミングに応じて単独打鍵とする。
-			if ((moji == param) && (now - oyayubi_time < e_nicolaTime) && (oyayubi_time - moji_time) > (now - oyayubi_time)) {
-				uint16_t oya = oyayubi;
-				oyayubi = 0;
-				if (!immediate)
-					output();  
-				moji = 0;
-				immediate = false;
-				oyayubi = oya;
-				state = Oyayubi_State;
 				break;
-			}
-			output();
-			state = Initial_State;
+			case Time_out:
+				//**koseki(2024.5.1)
+				state = Initial_State;
+				//**
+				break;	// ignore time-out event.	
+			default:
+				state = Initial_State;
+				break;
+			}	
 			break;
-		case Time_out:
-			repeat_oyayubi = oyayubi;
-			repeat_moji = moji;
-			output();
-			state = Repeat_State;
-			repeat_time = millis() + repeat_delay;
-			break;
-		default:
-			break;		
-		}
-		break;
-	case Repeat_State:
-		switch(e) {
-		case Key_repeat:
-			output();
-			break;
-		case Oyayubi_pressed:
-			oyayubi_set(param);
-			moji = 0;
-			state = Oyayubi_State;
-			break;		
-		case Moji_pressed:
-			moji_set(param);
-			state = Character_State;
-			break;
-		case Time_out:
-			break;	// ignore time-out event.	
 		default:
 			state = Initial_State;
 			break;
-		}	
-		break;
 	}
 }
 
@@ -294,12 +315,28 @@ void HoboNicola::output() {
 	oyayubi = 0;
 	moji = 0;
 	if (p) {
+		/*
 		if (state == Release_Wait_State) {
 			sendBS();	// タイムアウトで出した文字をキャンセル。
 			delay(2);
 		}
+		*/
 		send_PGM_string(p);
 	}
+}
+
+void HoboNicola::output_oya_long_press() {
+	// USキーボードのときだけ親指キーの長押しが有効
+	if (_US_LAYOUT(global_setting)) {
+		if(LOWBYTE(oyayubi) == NID_LEFT_OYAYUBI) {
+			stroke(HID_TAB, modifiers);         // タイムアウト時はTAB(変換候補選択)キー
+		}
+		else if(LOWBYTE(oyayubi) == NID_RIGHT_OYAYUBI) {
+			stroke(HID_F15, modifiers);         // タイムアウト時はF15(変換)キー
+		}
+	}
+	moji = 0;
+	oyayubi = 0;
 }
 
 void HoboNicola::immediate_output(uint16_t moji) {

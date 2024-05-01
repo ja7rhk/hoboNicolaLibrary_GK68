@@ -93,15 +93,16 @@ public:
 	void set_oyayubi_keys(uint8_t left, uint8_t right) { left_oyayubi_code = left; right_oyayubi_code = right; }
 	void has_dedicated_oyakeys(bool f = true) { dedicated_oyakeys = f; }
 
+//koseki(2024.5.1)
 	enum {
 		Initial_State = 0,		// 初期状態
 		Oyayubi_State,			// 親指キー押下状態
 		Character_State,		// 文字キー押下状態
 		Char_Oya_State,			// 文字キー押下中の親指キー押下状態
-		Repeat_State,			// リピート中状態
-		Release_Wait_State		// 文字確定後リリース待ち（長押し用）
+		Repeat_State			// リピート中状態
+		//Release_Wait_State		// 文字確定後リリース待ち（長押し用）
 	} state;
-	
+//**
 	
 	uint8_t isScrLock() const;
 	uint8_t isNumLock() const;
@@ -156,6 +157,9 @@ private:
 
 	uint16_t get_nid(uint8_t& k);
 	void output() ;
+	//koseki(2024.5.1)
+	void output_oya_long_press();	// 親指シフトキー長押し
+	//**
 	const uint8_t* get_output_data(uint16_t moji, uint16_t oyayubi);  // return pgm address.
 
 	unsigned long event_time;
@@ -168,8 +172,12 @@ private:
 	uint16_t repeat_moji;
 	uint16_t repeat_oyayubi;
 
-	const unsigned long e_charTime = 200;
-	const unsigned long e_oyaTime = 200;
+//**koseki(2024.5.1)
+	//const unsigned long e_charTime = 200;
+	//const unsigned long e_oyaTime = 200;
+	const unsigned long e_charTime = 150;
+	const unsigned long e_oyaTime = 250;		// 親指キー長押し
+//**
 	const unsigned long e_nicolaTime = 80;
 	const unsigned long repeat_delay = 250;
 	const unsigned long repeat_interval = 80;

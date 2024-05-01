@@ -172,13 +172,7 @@ void HoboNicola::key_event(uint8_t code, bool pressed) {
 	}
 
 // キーの入れ替えなど
-//**koseki(2024.3.20)
-	// Nicolaオフのときは右親指キーを常にスペースに置き換える
-	if (!isNicola()) {
-		if (code == HID_F15 || code == HID_HENKAN) {
-			code = HID_SPACE;
-		}
-	}
+//**koseki(2024.5.1)
 #if 0
 	if (_SWAP_CAPS_CTRL(global_setting)) {	// CAPSと左CTRL入れ替え
 		if (code == HID_CAPS)
