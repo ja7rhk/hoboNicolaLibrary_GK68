@@ -22,7 +22,7 @@
 			Separating nicola tables to nicola_table.cpp
 */
 //**koseki(2024.5.1)
-//	- deleted the Release_Wait_State.
+//	- deleted the Release_Wait_State and Repeat_State.
 //	- added output_oya_long_press() for long time pressing oyayubi.
 //**
 
@@ -34,25 +34,18 @@ void HoboNicola::timer_tick(unsigned long now) {
 		event_time = 0;
 		nicola_state(Time_out, 0);
 	}
-	if (_SELF_REPEAT(global_setting) && (repeat_time != 0) && (now > repeat_time)) {
-		nicola_state(Key_repeat, 0);
-		repeat_time = now + repeat_interval;
-	}
 }
 
 void HoboNicola::moji_set(uint16_t param) {
 	moji = param;
 	moji_time = millis();
 	event_time = moji_time + e_charTime;
-	repeat_moji = repeat_oyayubi = 0;
-	immediate_output(moji);
 }
 
 void HoboNicola::oyayubi_set(uint16_t param) {
 	oyayubi = param;
 	oyayubi_time = millis();
 	event_time = oyayubi_time + e_oyaTime;
-	repeat_moji = repeat_oyayubi = 0;
 }
 
 // 即時出力用の前文字キャンセル。
@@ -62,15 +55,10 @@ static bool immediate = false;
 
 void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 	unsigned long now = millis();
-	if (e == All_off) {
-		repeat_time = 0;
-	}
 	switch(state) {
 		case Initial_State:
 			event_time = moji_time = oyayubi_time = 0;
 			oyayubi = moji = 0;
-			repeat_moji = repeat_oyayubi = 0;
-			repeat_time = 0;
 			immediate = false;
 			switch(e) {
 				case Moji_pressed:
@@ -109,48 +97,17 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 					state = Char_Oya_State;
 					break;
 				case Time_out:
-					repeat_moji = moji;
 					output();
-					//**koseki(2024.5.1)
-					/*
-					if (_SINGLE_OYAYUBI_MODE(global_setting)) {	// 長押し待ちへ
-						event_time = now + e_longpressTime;
-						state = Release_Wait_State;
-					} else {
-					*/
-						state = Repeat_State;
-						repeat_time = millis() + repeat_delay;
-					//}
-					//**
+				//**koseki(2024.5.1)
+					state = Initial_State;
+				//**
 					break;
 				default:
 					break;			
 			}
 			break;
 		//**koseki(2024.5.1)
-		/*
-		case Release_Wait_State:	// 長押しタイムアウト待ち
-			switch(e) {
-				case Moji_pressed:
-					moji_set(param);
-					state = Character_State;
-					break;
-				case Oyayubi_pressed:
-					oyayubi_set(param);
-					state = Oyayubi_State;
-					break;
-				case Time_out:	// 長押し時間経過
-					repeat_oyayubi = NID_LONG_PRESSED;
-					output();	
-					state = Repeat_State;
-					repeat_time = millis() + repeat_delay;
-					break;
-				default:
-					state = Initial_State;
-					break;			
-				}
-			break;
-		*/
+		//case Release_Wait_State:	// 長押しタイムアウト待ち
 		//**
 		case Oyayubi_State:
 			switch(e) {
@@ -158,11 +115,9 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 					state = Initial_State;
 					break;
 				case Moji_pressed:
-					repeat_oyayubi = oyayubi;
-					repeat_moji = param;
+					moji_set(param);
 					output();
-					state = Repeat_State;
-					repeat_time = millis() + repeat_delay;
+					state = Initial_State;
 					break;
 				case All_off:
 					output();
@@ -180,13 +135,9 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 					break;
 				case Time_out:
 					if (!dedicated_oyakeys) {
-						repeat_oyayubi = oyayubi;
 					//**koseki(2024.5.1)
-						//output();
 						output_oya_long_press();
-						//state = Repeat_State;
 						state = Initial_State;
-						//repeat_time = millis() + repeat_delay;
 					//**
 					}
 					break;
@@ -219,11 +170,10 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 						if (!immediate)
 							output();   // 先行の文字だけ出す
 						immediate = false;
-						repeat_oyayubi = oya;
-						repeat_moji = param;
 						output();   // 後追いの文字と親指
-						state = Repeat_State;
-						repeat_time = millis() + repeat_delay;
+					//**koseki(2024.5.1)
+						state = Initial_State;
+					//**
 					}
 					break;
 				case Key_released:  // 文字キーが離されたタイミングに応じて単独打鍵とする。
@@ -242,40 +192,18 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 					state = Initial_State;
 					break;
 				case Time_out:
-					repeat_oyayubi = oyayubi;
-					repeat_moji = moji;
 					output();
-					state = Repeat_State;
-					repeat_time = millis() + repeat_delay;
+				//**koseki(2024.5.1)
+					state = Initial_State;
+				//**
 					break;
 				default:
 					break;		
 			}
 			break;
-		case Repeat_State:
-			switch(e) {
-			case Key_repeat:
-				output();
-				break;
-			case Oyayubi_pressed:
-				oyayubi_set(param);
-				moji = 0;
-				state = Oyayubi_State;
-				break;		
-			case Moji_pressed:
-				moji_set(param);
-				state = Character_State;
-				break;
-			case Time_out:
-				//**koseki(2024.5.1)
-				state = Initial_State;
-				//**
-				break;	// ignore time-out event.	
-			default:
-				state = Initial_State;
-				break;
-			}	
-			break;
+		//**koseki(2024.5.1)
+		//case Repeat_State:
+		//**
 		default:
 			state = Initial_State;
 			break;
@@ -285,10 +213,6 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 #define isShiftPressed() (bool) ((modifiers & HID_SHIFT_MASK) != 0)
 
 void HoboNicola::output() {
-	if (repeat_moji || repeat_oyayubi) {	// 長押しのときもrepeat_mojiに入っている。
-		moji = repeat_moji;
-		oyayubi = repeat_oyayubi;
-	}
 	if (moji == 0 && oyayubi) {
 		stroke(HIGHBYTE(oyayubi), modifiers);
 		oyayubi = 0;
@@ -339,12 +263,3 @@ void HoboNicola::output_oya_long_press() {
 	oyayubi = 0;
 }
 
-void HoboNicola::immediate_output(uint16_t moji) {
-	if (!_OUTPUT_IMMEDIATE_ON(global_setting) || setup_mode)
-		return;
-	const uint8_t* p = get_output_data(moji, isShiftPressed() ? NID_SHIFT_KEY : 0);
-	if (p) {
-		send_PGM_string(p);
-		immediate = true;
-	}
-}

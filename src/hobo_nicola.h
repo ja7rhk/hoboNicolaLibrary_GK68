@@ -98,8 +98,8 @@ public:
 		Initial_State = 0,		// 初期状態
 		Oyayubi_State,			// 親指キー押下状態
 		Character_State,		// 文字キー押下状態
-		Char_Oya_State,			// 文字キー押下中の親指キー押下状態
-		Repeat_State			// リピート中状態
+		Char_Oya_State			// 文字キー押下中の親指キー押下状態
+		//Repeat_State			// リピート中状態
 		//Release_Wait_State		// 文字確定後リリース待ち（長押し用）
 	} state;
 //**
@@ -165,12 +165,12 @@ private:
 	unsigned long event_time;
 	unsigned long moji_time;
 	unsigned long oyayubi_time;
-	unsigned long repeat_time;
+	//unsigned long repeat_time;
 	
 	uint16_t oyayubi;
 	uint16_t moji;
-	uint16_t repeat_moji;
-	uint16_t repeat_oyayubi;
+	//uint16_t repeat_moji;
+	//uint16_t repeat_oyayubi;
 
 //**koseki(2024.5.1)
 	//const unsigned long e_charTime = 200;
@@ -183,7 +183,7 @@ private:
 	const unsigned long repeat_interval = 80;
 	const unsigned long e_longpressTime = 60;	// 長押し
 
-	void immediate_output(uint16_t moji);
+	//void immediate_output(uint16_t moji);
 
 	bool setup_mode;
 	void setup_options(uint8_t nid);
