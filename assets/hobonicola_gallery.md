@@ -15,13 +15,4 @@
 ![](./images/miniUHS_adapter.jpg)
 
 
-## FUJITSU FMV-KB611 Keyboard
-
-![](./images/FMV-KB611_keyboard.jpg)
-
-## PS/2 hoboNicola. Pro Micro (USB Type C) and PS/2 connector.
-
-![](./images/PS2_adapter.jpg)
-
-
 [戻る/Back](../README.md)
