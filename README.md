@@ -8,7 +8,7 @@
 
 	● 対象アダプター
 	rp_hobo_nicola_GK68  : Seeed Stduio XIAO RP2040
-	usb_hobo_nicola_GK68 : Seeduino XIAO-m1 + mini USB Host Shield
+	usb_hobo_nicola_GK68 : Seeed Stduio XIAO SAMD21 + mini USB Host Shield
 
 	設定モードに入るには 左CTRL + MENU(App) + 100ms -> 'S'キー
 	● GK68X USキーボードの設定モード; *2 + *U + *N
@@ -27,6 +27,8 @@
 	|      DEL      |      F15    |      |		Layer2 (例)
 	--------------------------------------
 
+## rp_hobo_nicola_GK68
+
 	********************************************************
 	*** CPU Seeed XIAO RP2040 (Raspberry Pi Pico/RP2040) ***
 	*** CPU clock = 120MHz                               ***
@@ -37,7 +39,18 @@
 	　                  |
 	                    +---\libralies---+---\Adafruit_TinyUSB_Library
 	                                     |
-	                                     +---\hoboNicolaLibrary
+	                                     +---\hoboNicolaLibrary_GK68
 	                                     |
 	                                     +---\Pico_PIO_USB
+## usb_hobo_nicola_GK68
 
+	********************************************************
+	*** Seeeduino XIAO (Adafruit SAMD Boards)            ***
+	*** USB Stack = Adafruit TinyUSB                     ***
+	********************************************************
+
+	\作業ディレクトリ---+---\rp_hobo_nicola_GK68---usb_hobo_nicola_GK68.ino
+	　                  |
+	                    +---\libralies---+---\Adafruit_TinyUSB_Library
+	                                     |
+	                                     +---\hoboNicolaLibrary_GK68
