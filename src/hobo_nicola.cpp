@@ -172,8 +172,6 @@ void HoboNicola::key_event(uint8_t code, bool pressed) {
 	}
 
 // キーの入れ替えなど
-//**koseki(2024.5.1)
-#if 0
 	if (_SWAP_CAPS_CTRL(global_setting)) {	// CAPSと左CTRL入れ替え
 		if (code == HID_CAPS)
 			code = HID_L_CTRL;
@@ -221,8 +219,6 @@ void HoboNicola::key_event(uint8_t code, bool pressed) {
 // F14や無変換はEnterキーにしてしまう。親指左キーとしている場合に設定すること。
 	if ((code == HID_MUHENKAN || code == HID_F14) && _MUHENKAN_F14_TO_LEFT(global_setting))
 		code = HID_ENTER;
-#endif
-//**
 	if (is_media_code(code)) { 
 		send_media_code(code, pressed);
 		return;
