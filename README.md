@@ -54,3 +54,8 @@
 	                    +---\libralies---+---\Adafruit_TinyUSB_Library
 	                                     |
 	                                     +---\hoboNicolaLibrary_GK68
+
+## 情報元
+* https://github.com/okiraku-camera/hoboNicolaLibrary オリジナルのhoboNicola library。 
+* https://github.com/okiraku-camera/observe_ime hoboNicolaで使用しているobserve_imeの情報です。
+
