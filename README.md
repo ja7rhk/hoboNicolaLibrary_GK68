@@ -55,6 +55,17 @@
 	                                     |
 	                                     +---\hoboNicolaLibrary_GK68
 
+## observe_imeとMS-IMEの設定
+
+アダプターを使用する場合、observe_imeを利用すると所謂モードずれがないので便利です。GK68は10キーがないのでNumLockでモード切替えをします。
+
+![](assets/images/observe_ime_num.png)
+
+USキーボードは無変換・変換キーがないのでF14/F15を使用します。以下はMS-IMEの設定例です(以前のバージョンを使用)。カナ変換はF7キーで出来ます。
+
+![](assets/images/ms_ime.png)
+
+
 ## 情報元
 * https://github.com/okiraku-camera/hoboNicolaLibrary オリジナルのhoboNicola library。 
 * https://github.com/okiraku-camera/observe_ime hoboNicolaで使用しているobserve_imeの情報です。
