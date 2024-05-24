@@ -65,10 +65,15 @@ USキーボードは無変換・変換キーがないのでF14/F15を使用し�
 
 ![](assets/images/ms_ime.png)
 
+変換時の色はATOKのほうがJapanist/OAKに近い雰囲気になります。
+
+![](assets/images/color.png)
+
 
 ## 情報元
 * https://github.com/okiraku-camera/hoboNicolaLibrary オリジナルのhoboNicola library。 
 * https://github.com/okiraku-camera/observe_ime hoboNicolaで使用しているobserve_imeの情報です。
 * https://www.pcbway.com/project/shareproject/hoboNicola_for_XIAO_RP2040_85b65544.html プリント基板の入手先です。
+* https://skyloongtech.com/skyloong-gk68/ref/13/ GK68の購入先
 
 
