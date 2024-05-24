@@ -1,4 +1,4 @@
-# hoboNicola library for Skyloong GK68 Lite / GK68X
+# hoboNicola library for [SKYLOONG GK68](https://skyloongtech.com/skyloong-gk68/ref/13/)
 
 ![](assets/images/RP2040_adapter.jpg)
 
