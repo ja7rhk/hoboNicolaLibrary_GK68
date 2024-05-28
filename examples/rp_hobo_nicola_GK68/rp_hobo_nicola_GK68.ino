@@ -24,7 +24,7 @@
 	設定モードに入るには 左CTRL + MENU(App) + 100ms -> 'S'キー
 	GK68X USキーボードとUSBライトタッチキーボードを統合
 
-	● GK68X USキーボードの設定モード; *2 + *U + *M + *I
+	● GK68X USキーボードの設定モード; *2 + *U + *M
       ^^^^^^^^^^^^^^^^^
 	・GK68X B割れUSキーボード用に設定を固定。
 	・左親指シフトキーはF14、右親指シフトキーはSpaceにキーボード側で設定すること。
@@ -40,8 +40,9 @@
 	-------------------------------
 	-------------------------------------------
 	********************************************************
-	*** CPU Seeeduino XIAO (Adafruits SAMD Boards)       ***
-	*** USB Stack = TinyUSB                              ***
+	*** CPU Seeed XIAO RP2040 (Raspberry Pi Pico/RP2040) ***
+	*** CPU clock = 120MHz                               ***
+	*** USB Stack = Adafruit TinyUSB                     ***
 	********************************************************
 
 	\作業ディレクトリ---+---\usb_hobo_nicola_GK68---usb_hobo_nicola_GK68.ino
@@ -198,22 +199,7 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
 // Function keys with Fn-key pressed.
 static const uint16_t fn_keys[] PROGMEM = {
 	//**koseki(2024.3.12)
-	/*
-	HID_S | WITH_R_CTRL,	FN_SETUP_MODE,
-	HID_R | WITH_R_CTRL,	FN_MEMORY_READ_MODE,
-	HID_W | WITH_R_CTRL,	FN_MEMORY_WRITE_MODE,
-
-	HID_M,        				FN_MEDIA_MUTE,
-	HID_COMMA,						FN_MEDIA_VOL_DOWN,
-	HID_PERIOD,						FN_MEDIA_VOL_UP,
-	HID_U_ARROW,					HID_PGUP,
-	HID_D_ARROW,					HID_PGDOWN,
-	HID_R_ARROW,					HID_END,
-	HID_L_ARROW,					HID_HOME,
-	HID_ENTER,						FN_MEDIA_PLAY_PAUSE,
-	HID_IME_OFF,					HID_CAPS,								// Fn + ImeOff (Caps) = CapsLock
-	HID_ESCAPE | WITH_R_CTRL,  FN_SYSTEM_SLEEP,   // Ctrl + App + Esc
-	*/
+	HID_S | WITH_R_CTRL,		FN_SETUP_MODE,
   	HID_S | WITH_L_CTRL,		FN_SETUP_MODE,
 	HID_7,						FN_MEDIA_SCAN_PREV,
 	HID_8,						FN_MEDIA_PLAY_PAUSE,

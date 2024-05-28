@@ -11,7 +11,7 @@
 	usb_hobo_nicola_GK68 : Seeed Stduio XIAO SAMD21 + mini USB Host Shield
 
 	設定モードに入るには 左CTRL + MENU(App) + 100ms -> 'S'キー
-	● GK68X USキーボードの設定モード; *2 + *U + *N + *I
+	● GK68X USキーボードの設定モード; *2 + *U + *N
 
 	・GK68X B割れUSキーボード用に設定を固定。
 	・左親指シフトキーはF14、右親指シフトキーはSpaceにキーボード側で設定する。
