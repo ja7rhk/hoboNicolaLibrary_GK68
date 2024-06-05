@@ -153,15 +153,15 @@ static const uint8_t* const output_single_us[] PROGMEM = {	// 単独打鍵
 
 static const uint8_t* const output_left_us[] PROGMEM = {		// 左親指同時
 //1        2        3       4         5         6          7         8       9         10          11         12        13
-	s_quest, s_slash, s_tild, s_l_brac, s_r_brac, s_less,    s_gt,     s_aste, s_l_pren, s_r_pren,   s_uline,   s_plus,   s_pipe,
-	s_xa, 	 s_e,     s_ri,   s_xya,    s_re,     s_pa,      s_di,     s_gu,   s_du,     s_pi,       s_l_cbrac, s_r_cbrac,
-	s_wo,    s_a,     s_na,   s_xyu,    s_mo,     s_ba,      s_do,     s_gi,   s_po,     s_nul,      s_nul,     s_nul,
-	s_xu,    s_minus, s_ro,   s_ya,     s_xi,     s_pu,      s_zo,     s_pe,   s_bo,     s_nul
+	s_quest, s_slash, s_tild, s_l_brac, s_r_brac, s_l_cbrac, s_r_cbrac, s_aste, s_l_pren, s_r_pren,   s_uline,   s_plus,   s_pipe,
+	s_xa, 	 s_e,     s_ri,   s_xya,    s_re,     s_pa,      s_di,     s_gu,    s_du,     s_pi,       s_l_cbrac, s_r_cbrac,
+	s_wo,    s_a,     s_na,   s_xyu,    s_mo,     s_ba,      s_do,     s_gi,    s_po,     s_nul,      s_nul,     s_nul,
+	s_xu,    s_minus, s_ro,   s_ya,     s_xi,     s_pu,      s_zo,     s_pe,    s_bo,     s_nul
 };
 
 static const uint8_t* const output_right_us[] PROGMEM = {		// 右親指同時
 //1        2        3       4         5         6          7         8        9         10          11         12        13
-	s_quest, s_slash, s_tild, s_l_brac, s_r_brac, s_less,    s_gt,     s_aste,  s_l_pren, s_r_pren,   s_uline,   s_plus,   s_pipe,
+	s_quest, s_slash, s_tild, s_l_brac, s_r_brac, s_l_cbrac, s_r_cbrac, s_aste, s_l_pren, s_r_pren,   s_uline,   s_plus,   s_pipe,
 	s_nul,   s_ga,    s_da,   s_go,     s_za,     s_yo,      s_ni,     s_ru,    s_ma,     s_xe,       s_l_cbrac, s_r_cbrac,
 	s_vu,    s_ji,    s_de,   s_ge,     s_ze,     s_mi,      s_o,      s_no,    s_xyo,    s_xtu,      s_nul,     s_nul, 
 	s_nul,   s_bi,    s_zu,   s_bu,     s_be,     s_nu,      s_yu,     s_mu,    s_wa,     s_xo
