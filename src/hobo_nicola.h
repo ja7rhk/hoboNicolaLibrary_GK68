@@ -95,11 +95,12 @@ public:
 
 //koseki(2024.5.1)
 	enum {
-		Initial_State = 0,		// 初期状態
-		Oyayubi_State,			// 親指キー押下状態
-		Character_State,		// 文字キー押下状態
-		Char_Oya_State			// 文字キー押下中の親指キー押下状態
-		//Repeat_State			// リピート中状態
+		S1_Initial_State = 0,		// S1) 初期状態
+		S2_Character_State,			// s2) 文字キー押下状態
+		S3_Oyayubi_State,			// S3) 親指キー押下状態
+		S4_Char_Oya_State,			// S4) 文字キー押下中の親指キー押下状態
+		S5_Oya_Char_State			// S5) 親指キー押下中の文字キー押下状態
+		//Repeat_State				// リピート中状態
 		//Release_Wait_State		// 文字確定後リリース待ち（長押し用）
 	} state;
 //**
@@ -166,6 +167,8 @@ private:
 	unsigned long moji_time;
 	unsigned long oyayubi_time;
 	//unsigned long repeat_time;
+	unsigned long t1;
+	unsigned long t2;
 	
 	uint16_t oyayubi;
 	uint16_t moji;

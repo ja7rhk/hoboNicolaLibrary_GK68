@@ -339,7 +339,7 @@ void HoboNicola::key_event(uint8_t code, bool pressed) {
 			nicola_state(All_off);  // flush
 			report_press(code, modifiers);	// 関係ないキー
 			return;
-		} else if (state == Initial_State) {	// キーオフはInitialのみリリース。
+		} else if (state == S1_Initial_State) {	// キーオフはInitialのみリリース。
 			report_release(code, modifiers);
 			return ;
 		}
@@ -350,7 +350,7 @@ void HoboNicola::key_event(uint8_t code, bool pressed) {
 		else
 			nicola_state(Moji_pressed, m);    
 	} else {
-		if (state != Initial_State)
+		if (state != S1_Initial_State)
 			nicola_state(Key_released, m);
 		else
 			report_release(code, modifiers);

@@ -56,37 +56,31 @@ static bool immediate = false;
 void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 	unsigned long now = millis();
 	switch(state) {
-		case Initial_State:
+		case S1_Initial_State:
 			event_time = moji_time = oyayubi_time = 0;
 			oyayubi = moji = 0;
 			immediate = false;
 			switch(e) {
 				case Moji_pressed:
 					moji_set(param);
-					state = Character_State;
+					state = S2_Character_State;
 					break;
 				case Oyayubi_pressed:
 					oyayubi_set(param);
-					state = Oyayubi_State;
+					state = S3_Oyayubi_State;
 					break;
 				default:
 					break;
 			}
 			break;
-		case Character_State:
+		case S2_Character_State:
 			switch(e) {
 				case Init:
-					state = Initial_State;
+					state = S1_Initial_State;
 					break;
 				case All_off:
 					output();
-					state = Initial_State;
-					break;
-				case Key_released:
-					if (param == moji) {	// 関係のない文字のオフは無視する。
-						output();
-						state = Initial_State;
-					}
+					state = S1_Initial_State;
 					break;
 				case Moji_pressed:
 					output();
@@ -94,12 +88,18 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 					break;
 				case Oyayubi_pressed:
 					oyayubi_set(param);
-					state = Char_Oya_State;
+					state = S4_Char_Oya_State;
+					break;
+				case Key_released:
+					if (param == moji) {	// 関係のない文字のオフは無視する。
+						output();
+						state = S1_Initial_State;
+					}
 					break;
 				case Time_out:
 					output();
 				//**koseki(2024.5.1)
-					state = Initial_State;
+					state = S1_Initial_State;
 				//**
 					break;
 				default:
@@ -109,35 +109,38 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 		//**koseki(2024.5.1)
 		//case Release_Wait_State:	// 長押しタイムアウト待ち
 		//**
-		case Oyayubi_State:
+		case S3_Oyayubi_State:
 			switch(e) {
 				case Init:
-					state = Initial_State;
-					break;
-				case Moji_pressed:
-					moji_set(param);
-					output();
-					state = Initial_State;
+					state = S1_Initial_State;
 					break;
 				case All_off:
 					output();
-					state = Initial_State;
+					state = S1_Initial_State;
 					break;
-				case Key_released:
-					if (param == oyayubi) {
-						output();
-						state = Initial_State;
-					}
+				case Moji_pressed:
+					moji_set(param);
+					//**koseki(2024.5.1)
+					//output();
+					//state = S1_Initial_State;
+					state = S5_Oya_Char_State;
+					//**
 					break;
 				case Oyayubi_pressed:
 					output();
 					oyayubi_set(param);
 					break;
+				case Key_released:
+					if (param == oyayubi) {
+						output();
+						state = S1_Initial_State;
+					}
+					break;
 				case Time_out:
 					if (!dedicated_oyakeys) {
 					//**koseki(2024.5.1)
 						output_oya_long_press();
-						state = Initial_State;
+						state = S1_Initial_State;
 					//**
 					}
 					break;
@@ -145,56 +148,60 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 					break;			
 			}
 			break;
-		case Char_Oya_State:
+		case S4_Char_Oya_State:
 			switch(e) {
 				case Init:
-					state = Initial_State;
+					state = S1_Initial_State;
 					break;
 				case All_off:
 					output();
-					state = Initial_State;
-					break;
-				case Oyayubi_pressed:
-					output();
-					oyayubi_set(param);
-					state = Oyayubi_State;
+					state = S1_Initial_State;
 					break;
 				case Moji_pressed:
-					if ((oyayubi_time - moji_time) < (now - oyayubi_time)) {
+					//**koseki(2024.5.1)
+				    // M ON --> O ON --> M OFF
+					t1 = oyayubi_time - moji_time;
+					t2 = now - oyayubi_time;
+					if (t1 < t2) {
 						output();   // 先行の文字と親指
 						moji_set(param);
-						state = Character_State;
+						state = S2_Character_State;
 					} else {
 						uint16_t oya = oyayubi;
 						oyayubi = 0;
-						if (!immediate)
-							output();   // 先行の文字だけ出す
-						immediate = false;
-						output();   // 後追いの文字と親指
-					//**koseki(2024.5.1)
-						state = Initial_State;
-					//**
+						output();   // 先行の文字だけ出す
+						oyayubi = oya;
+						moji_set(param);
+						state = S5_Oya_Char_State;
 					}
 					break;
+					//**
+				case Oyayubi_pressed:
+					output();
+					oyayubi_set(param);
+					state = S3_Oyayubi_State;
+					break;
 				case Key_released:  // 文字キーが離されたタイミングに応じて単独打鍵とする。
-					if ((moji == param) && (now - oyayubi_time < e_nicolaTime) && (oyayubi_time - moji_time) > (now - oyayubi_time)) {
+					//**koseki(2024.5.1)
+	              	// M ON --> O ON --> M OFF
+					t1 = oyayubi_time - moji_time;
+					t2 = now - oyayubi_time;
+					if ((moji == param) && (t2 < e_nicolaTime) && (t1 >= t2)) {
+	                // M ON --> O ON --> M OFF (M is output, but O is still open to combo)
 						uint16_t oya = oyayubi;
 						oyayubi = 0;
-						if (!immediate)
-							output();  
+						output();	// 先行の文字だけ出す
 						moji = 0;
-						immediate = false;
 						oyayubi = oya;
-						state = Oyayubi_State;
+						state = S3_Oyayubi_State;
 						break;
 					}
 					output();
-					state = Initial_State;
+					state = S1_Initial_State;
 					break;
 				case Time_out:
 					output();
-				//**koseki(2024.5.1)
-					state = Initial_State;
+					state = S1_Initial_State;
 				//**
 					break;
 				default:
@@ -202,10 +209,66 @@ void HoboNicola::nicola_state(nicola_event_t e, uint16_t param) {
 			}
 			break;
 		//**koseki(2024.5.1)
+		case S5_Oya_Char_State:
+			switch(e) {
+				case Init:
+					state = S1_Initial_State;
+					break;
+				case All_off:
+					output();
+					state = S1_Initial_State;
+					break;
+				case Moji_pressed:
+					output();   	// 先行の文字と親指
+					moji_set(param);
+					state = S2_Character_State;
+					break;
+				case Oyayubi_pressed:
+					t1 = moji_time - oyayubi_time;
+					t2 = now - moji_time;
+					if (t1 < t2) {
+						output();   // 先行の親指と文字
+						oyayubi_set(param);
+						state = S3_Oyayubi_State;
+					} else {
+						uint16_t mo = moji;
+						moji = 0;
+						output();   // 先行の親指だけ出す
+						moji = mo;
+						oyayubi_set(param);
+						state = S4_Char_Oya_State;
+					}
+					break;
+				case Key_released:  // 文字キーが離されたタイミングに応じて単独打鍵とする。
+	              	// O ON --> M ON --> O OFF
+					t1 = moji_time - oyayubi_time;
+					t2 = now - moji_time;
+					if ((oyayubi == param) && (t2 < e_nicolaTime) && (t1 >= t2)) {
+					// O ON --> M ON --> O OFF (O is output, but M is still open to combo)
+						uint16_t mo = moji;
+						moji = 0;
+						output();   // 先行の親指だけ出す  
+						moji = mo;
+						state = S2_Character_State;
+						break;
+					}
+					output();
+					state = S1_Initial_State;
+					break;
+				case Time_out:
+					output();
+					state = S1_Initial_State;
+					break;
+				default:
+					break;		
+			}
+			break;
+		//**
+		//**koseki(2024.5.1)
 		//case Repeat_State:
 		//**
 		default:
-			state = Initial_State;
+			state = S1_Initial_State;
 			break;
 	}
 }
