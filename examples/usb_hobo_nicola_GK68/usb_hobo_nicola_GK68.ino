@@ -50,7 +50,7 @@
 
 	\作業ディレクトリ---+---\usb_hobo_nicola_GK68---usb_hobo_nicola_GK68.ino
 	　                  |
-	                    +---\libralies---+---\Adafruit_TinyUSB_Library
+	                    +---\libraries---+---\Adafruit_TinyUSB_Library
 	                                     |
 	                                     +---\hoboNicolaLibrary
 										 
